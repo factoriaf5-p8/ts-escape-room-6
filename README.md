@@ -1,49 +1,49 @@
-<a href="https://totaltypescript.com/tutorials/beginners-typescript"><img src="https://res.cloudinary.com/total-typescript/image/upload/v1664461034/beginners-typescript-tutorial/github_2x_himnyi.png" alt="beginner typescript tutorial" /></a>
+# Typescript Labs
 
-## Quickstart
+## Lab 6: Constraining Value Types
 
-Take the course on [Total TypeScript](https://totaltypescript.com/tutorials/beginners-typescript). There, you'll find:
+file: `/src/06-unions.problem.ts`
 
-- Video explanations for each problem and solution
-- Transcripts
-- Text explanations
-- A built-in Stackblitz editor
+Earlier we looked at a User that had a boolean isAdmin property.
 
-```sh
-# Installs all dependencies
-npm install
+But what if we had other types of roles?
 
-# Asks you which exercise you'd like to run, and runs it
-npm run exercise
+We wouldn't want to use a freeform string, because there are only a set number of roles that a User could have: admin, user, or super-admin.
+
+```ts
+interface User {
+  id: number;
+  firstName: string;
+  lastName: string;
+  /**
+   * How do we ensure that role is only one of:
+   * - 'admin'
+   * - 'user'
+   * - 'super-admin'
+   */
+  role: string;
+}
 ```
+Consider this `defaultUser`:
 
-## How to take the course
+```ts
+export const defaultUser: User = {
+  id: 1,
+  firstName: "Matt",
+  lastName: "Pocock",
+  // @ts-expect-error
+  role: "I_SHOULD_NOT_BE_ALLOWED",
+};
+```
+It's being defined with a role that is not one of our options.
 
-You'll notice that the course is split into exercises. Each exercise is split into a `*.problem` and a `*.solution`.
+Note that the `// @ts-expect-error` comment tells TypeScript that we are expecting there to be an error on the next line.
 
-To take an exercise:
+If there is not an error on the next line down, there will be a red squiggle under `// @ts-expect-error`. If there is an error, the line is happy and there will not be any red.
 
-1. Run `npm run exercise`
-2. Choose which exercise you'd like to run.
+In our code's current state, we see the red line because the "I_SHOULD_NOT_BE_ALLOWED" is a string as the User interface expects, so there is no error.
 
-This course encourages **active, exploratory learning**. In the video, I'll explain a problem, and **you'll be asked to try to find a solution**. To attempt a solution, you'll need to:
+Challenge
+Update the User interface to restrict the role property to one of the set options.
 
-1. Check out [TypeScript's docs](https://www.typescriptlang.org/docs/handbook/intro.html).
-1. Try to find something that looks relevant.
-1. Give it a go to see if it solves the problem.
-
-You'll know if you've succeeded because the tests will pass.
-
-**If you succeed**, or **if you get stuck**, unpause the video and check out the `*.solution`. You can see if your solution is better or worse than mine!
-
-## Acknowledgements
-
-Say thanks to Matt on [Twitter](https://twitter.com/mattpocockuk) or by joining his [Discord](https://discord.gg/8S5ujhfTB3). Consider signing up to his [Total TypeScript course](https://totaltypescript.com).
-
-## Reference
-
-### `npm run exercise`
-
-Alias: `npm run e`
-
-Open a prompt for choosing which exercise you'd like to run.
+The I_SHOULD_NOT_BE_ALLOWED role should cause an error, which will remove the red squiggly line from underneath the `// @ts-expect-error` line.
